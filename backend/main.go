@@ -2,6 +2,7 @@ package main
 
 import (
 	"notes/backend/controllers"
+	"notes/backend/middlewares"
 	"notes/backend/services/database"
 
 	"github.com/gin-gonic/gin"
@@ -19,10 +20,9 @@ func main() {
 	auth.POST("/login", controllers.Login)
 
 	notes := api.Group("/notes")
-	// notes.Use(middlewares.JwtAuthMiddleware())
-	notes.GET("", controllers.GetUserNotes)
-
-	// notes.POST("/new", controllers.AddNote)
+	notes.Use(middlewares.JwtAuthMiddleware())
+	notes.GET("/", controllers.GetUserNotes)
+	notes.POST("/new", controllers.AddNote)
 
 	router.Run(":8080")
 }

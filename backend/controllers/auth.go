@@ -22,21 +22,20 @@ type SignupInput struct {
 }
 
 func GetCurrentUser(c *gin.Context) {
-	id, err := token.ExtractTokenID(c)
+	userID, err := token.ExtractUserID(c)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
 	var user models.User
-
-	user, err = database.GetUserByID(id)
+	user, err = database.GetUserByID(userID)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"message": "success", "data": user})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": user})
 	}
 }
 
@@ -45,18 +44,17 @@ func Login(c *gin.Context) {
 	var err error
 
 	if err = c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
 	var tkn string
-
 	tkn, err = database.LoginUser(input.Username, input.Password)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "incorrect username or password"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": "Incorrect username or password"})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"token": tkn})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": tkn})
 	}
 }
 
@@ -65,13 +63,13 @@ func Signup(c *gin.Context) {
 	var err error
 
 	if err = c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
 	if err = database.AddUser(input.Email, input.Username, input.Password); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"message": "registration successful"})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": "Registration successful"})
 	}
 }

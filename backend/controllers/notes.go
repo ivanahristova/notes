@@ -11,43 +11,49 @@ import (
 
 type NoteInput struct {
 	Title       string `json:"title" binding:"required,gte=1"`
-	Description string `json:"description" binding:"required"`
-	Status      string `json:"status" binding:"required,gte=1"`
+	Description string `json:"description"`
 }
 
-// func AddNote(c *gin.Context) {
-// 	var input NoteInput
-// 	var err error
-
-// 	if err = c.ShouldBindJSON(&input); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	err = database.AddNote(input.Title, input.Description, input.Status)
-
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": "general error"})
-// 	} else {
-// 		c.JSON(http.StatusOK, gin.H{"message": "success"})
-// 	}
-// }
-
 func GetUserNotes(c *gin.Context) {
-	userId, err := token.ExtractTokenID(c)
+	userID, err := token.ExtractUserID(c)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
 	var notes []models.Note
-
-	notes, err = database.GetUserNotes(userId)
+	notes, err = database.GetUserNotes(userID)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"message": "success", "data": notes})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": notes})
+	}
+}
+
+func AddNote(c *gin.Context) {
+	var input NoteInput
+	var err error
+
+	if err = c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	var userID uint
+	userID, err = token.ExtractUserID(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	err = database.AddNote(input.Title, input.Description, userID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": "Note added successfully"})
 	}
 }
