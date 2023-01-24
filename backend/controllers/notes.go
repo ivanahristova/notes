@@ -11,8 +11,7 @@ import (
 
 type NoteInput struct {
 	Title       string `json:"title" binding:"required,gte=1"`
-	Description string `json:"description" binding:"required"`
-	Status      string `json:"status" binding:"required,gte=1"`
+	Description string `json:"description"`
 }
 
 func GetUserNotes(c *gin.Context) {
@@ -30,5 +29,31 @@ func GetUserNotes(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"message": "success", "data": notes})
+	}
+}
+
+func AddNote(c *gin.Context) {
+	var input NoteInput
+	var err error
+
+	if err = c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var userID uint
+	userID, err = token.ExtractUserID(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = database.AddNote(input.Title, input.Description, userID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "general error"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
 	}
 }

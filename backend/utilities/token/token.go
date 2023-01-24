@@ -22,6 +22,7 @@ func Generate(userID uint, roleID uint) (string, error) {
 	claims["user_id"] = userID
 	claims["user_role_id"] = roleID
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(lifespan)).Unix()
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(os.Getenv("TOKEN_SECRET")))

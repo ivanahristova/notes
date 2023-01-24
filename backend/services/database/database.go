@@ -32,7 +32,9 @@ func Connect() {
 		log.Fatalln("gorm: could not connect to database", err)
 	}
 
-	database.AutoMigrate(&models.User{})
+	if err = database.AutoMigrate(&models.User{}, &models.Note{}); err != nil {
+		log.Fatalln("gorm: could not run auto migration")
+	}
 
 	log.Println("Database connection successful")
 }
@@ -85,10 +87,6 @@ func LoginUser(username, password string) (string, error) {
 	return tkn, nil
 }
 
-func verifyPassword(hashedPassword, password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-}
-
 func GetUserNotes(userId uint) ([]models.Note, error) {
 	var notes []models.Note
 
@@ -99,12 +97,16 @@ func GetUserNotes(userId uint) ([]models.Note, error) {
 	return notes, nil
 }
 
-// func AddNote(title, description, status string) error {
-// 	note := models.Note{
-// 		Title:       html.EscapeString(strings.TrimSpace(title)),
-// 		Description: html.EscapeString(strings.TrimSpace(description)),
-// 		Status:      html.EscapeString(strings.TrimSpace(status)),
-// 	}
+func AddNote(title, description string, userID uint) error {
+	note := models.Note{
+		Title:       html.EscapeString(strings.TrimSpace(title)),
+		Description: html.EscapeString(strings.TrimSpace(description)),
+		UserID:      userID,
+	}
 
-// 	return database.Create(&note).Error
-// }
+	return database.Create(&note).Error
+}
+
+func verifyPassword(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+}
