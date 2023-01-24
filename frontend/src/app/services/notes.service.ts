@@ -1,8 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
+import { Note } from '../dto/note';
+import { NotesResponse } from '../dto/response';
 
-const NOTES_API = 'http://localhost:8080/api/notes';
+const NOTES_API = 'http://localhost:8080/api/auth/';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -14,22 +17,33 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class NotesService {
+  private getNotesUrl: string = 'http://localhost:8080/api/{userId}/notes'
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-  getNotes(userId: string): Observable<any> {
-    return this.http.get(
-      NOTES_API + '/all'
-    );
+  public getUserNotes(userId: string): Observable<NotesResponse> {
+    const url = this.getNotesUrl.replace('{userId}', userId);
+    return this.http.get<NotesResponse>(url, {
+      headers: { 'Authorization': 'Bearer ' + this.cookieService.get('user-jwt') }
+    });
   }
 
-  addNote(userId: string): Observable<any> {
+  public getNote(userId: number, noteId: number): Observable<Note> {
+    const url = 'http://localhost:8080/api/' + userId + '/notes/' + noteId;
+    return this.http.get<Note>(url, {
+      headers: { 'Authorization': 'Bearer ' + this.cookieService.get('user-jwt') }
+    });
+  }
+
+  createNote(title: string, description: string): Observable<any> {
     return this.http.post(
-      NOTES_API + '/new',
+      NOTES_API + 'new',
       {
-        userId,
+        title,
+        description
       },
       httpOptions
     );
   }
+
 }

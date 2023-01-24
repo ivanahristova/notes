@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { CookieService } from 'ngx-cookie-service';
+import { Note } from 'src/app/dto/note';
+import { NotesResponse } from 'src/app/dto/response';
 import { NotesService } from 'src/app/services/notes.service';
 
 @Component({
@@ -6,28 +11,47 @@ import { NotesService } from 'src/app/services/notes.service';
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.css']
 })
-export class NotesComponent {
-  form: any = {
-    title: null,
-    description: null
-  };
+export class NotesComponent implements OnInit {
+  public notes: NotesResponse = new NotesResponse();
+  private userId: string = '';
 
-  constructor(private notesService: NotesService) { }
+  selectedNote?: Note;
+
+  constructor(private notesService: NotesService, private activatedRoute: ActivatedRoute,
+              private router: Router, private cookieService: CookieService) {}
 
   ngOnInit(): void {
-    this.notesService.getNotes("1").subscribe({
-      next: data => {
-        console.log(data);
+    this.userId = this.activatedRoute.snapshot.paramMap.get('userId')!;
+    this.notesService.getUserNotes(this.userId).subscribe({
+      next: (response: NotesResponse) => {
+        console.log(response);
+        this.notes = response;
       },
-      error: err => {
-        // this.errorMessage = err.error.error.charAt(0).toUpperCase()
-        //                   + err.error.error.slice(1);
+      error: error => {
+        console.log(error);
       }
     });
   }
 
-  reloadPage(): void {
-    window.location.reload();
+  getUserNotes() {
+    const jwtService = new JwtHelperService();
+    const userId: string = jwtService.decodeToken(this.cookieService.get("user-jwt"))['user_id'];
+    this.notesService.getUserNotes(userId).subscribe({
+      next: (response: NotesResponse) => {
+        this.notes = response
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
   }
 
+  updateNote(noteId: string) {
+    // let  idString: string = noteId.toString;
+    this.router.navigate([`/notes/${this.userId}/update/${noteId}`]);
+  }
+
+  deleteCookie() {
+    this.cookieService.delete('user-jwt');
+  }
 }

@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { NoteComponent } from './pages/note/note.component';
 import { NotesComponent } from './pages/notes/notes.component';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { NotesComponent } from './pages/notes/notes.component';
     AppComponent,
     LoginComponent,
     SignupComponent,
+    NoteComponent,
     NotesComponent
   ],
   imports: [

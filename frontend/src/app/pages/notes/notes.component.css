@@ -1,0 +1,6 @@
+.my-btn {
+    width: max-content;
+    background: linear-gradient(90deg, #776BCC, #aaa7f1);
+    border: #776BCC;
+    margin: 1rem 1rem 1rem 1rem;
+}
