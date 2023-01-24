@@ -2,6 +2,11 @@
     color: white;
 }
 
+.ng-touched {
+    border-color: #aaa7f1;
+    background-clip: none;
+}
+
 .card-header {
     background: linear-gradient(90deg, #776BCC, #aaa7f1);
     border-color: transparent;

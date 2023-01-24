@@ -2,18 +2,14 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"html"
 	"log"
-	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"notes/backend/models"
 	"notes/backend/utilities/token"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
@@ -92,22 +88,22 @@ func verifyPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func GetUserNotes(c *gin.Context) {
-	userId, err := strconv.ParseUint(c.Param("userId"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": fmt.Sprintf("Error while parsing parameter %s", err.Error()),
-		})
-		return
-	}
-
+func GetUserNotes(userId uint) ([]models.Note, error) {
 	var notes []models.Note
-	if err := database.Where("user_id = ?", userId).Find(&notes).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Error while getting notes from database",
-		})
-		return
+
+	if err := database.Where("user_id = ? ", userId).Find(&notes).Error; err != nil {
+		return notes, errors.New("user not found")
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": notes})
+	return notes, nil
 }
+
+// func AddNote(title, description, status string) error {
+// 	note := models.Note{
+// 		Title:       html.EscapeString(strings.TrimSpace(title)),
+// 		Description: html.EscapeString(strings.TrimSpace(description)),
+// 		Status:      html.EscapeString(strings.TrimSpace(status)),
+// 	}
+
+// 	return database.Create(&note).Error
+// }
