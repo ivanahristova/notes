@@ -18,7 +18,7 @@ func GetUserNotes(c *gin.Context) {
 	userID, err := token.ExtractUserID(c)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
@@ -26,9 +26,9 @@ func GetUserNotes(c *gin.Context) {
 	notes, err = database.GetUserNotes(userID)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"message": "success", "data": notes})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": notes})
 	}
 }
 
@@ -37,7 +37,7 @@ func AddNote(c *gin.Context) {
 	var err error
 
 	if err = c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
@@ -45,15 +45,15 @@ func AddNote(c *gin.Context) {
 	userID, err = token.ExtractUserID(c)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
 	err = database.AddNote(input.Title, input.Description, userID)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "general error"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": "Note added successfully"})
 	}
 }
