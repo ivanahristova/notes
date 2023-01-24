@@ -73,7 +73,7 @@ func LoginUser(username, password string) (string, error) {
 		return "", err
 	}
 
-	if err = verifyPassword(password, user.Password); err != nil {
+	if err = verifyPassword(user.Password, password); err != nil {
 		return "", err
 	}
 
@@ -86,6 +86,6 @@ func LoginUser(username, password string) (string, error) {
 	return tkn, nil
 }
 
-func verifyPassword(password, hashedPassword string) error {
-	return bcrypt.CompareHashAndPassword([]byte(password), []byte(hashedPassword))
+func verifyPassword(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
