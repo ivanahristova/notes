@@ -75,7 +75,8 @@ func LoginUser(username, password string) (string, error) {
 		return "", err
 	}
 
-	tkn, err := token.Generate(user.ID, user.Admin)
+	var tkn string
+	tkn, err = token.Generate(user.ID, user.RoleID)
 
 	if err != nil {
 		return "", err
@@ -91,7 +92,7 @@ func verifyPassword(hashedPassword, password string) error {
 func GetUserNotes(userId uint) ([]models.Note, error) {
 	var notes []models.Note
 
-	if err := database.Where("user_id = ? ", userId).Find(&notes).Error; err != nil {
+	if err := database.Where("user_id = ?", userId).Find(&notes).Error; err != nil {
 		return notes, errors.New("user not found")
 	}
 

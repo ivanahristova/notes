@@ -22,7 +22,7 @@ type SignupInput struct {
 }
 
 func GetCurrentUser(c *gin.Context) {
-	id, err := token.ExtractTokenID(c)
+	userID, err := token.ExtractUserID(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -30,8 +30,7 @@ func GetCurrentUser(c *gin.Context) {
 	}
 
 	var user models.User
-
-	user, err = database.GetUserByID(id)
+	user, err = database.GetUserByID(userID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -50,7 +49,6 @@ func Login(c *gin.Context) {
 	}
 
 	var tkn string
-
 	tkn, err = database.LoginUser(input.Username, input.Password)
 
 	if err != nil {
