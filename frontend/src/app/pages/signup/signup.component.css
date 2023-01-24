@@ -1,0 +1,13 @@
+.m-1 {
+    color: white;
+}
+
+.card-header {
+    background: linear-gradient(90deg, #776BCC, #aaa7f1);
+    border-color: transparent;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #776BCC, #aaa7f1);
+    border-color: transparent;
+}
