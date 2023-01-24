@@ -2,7 +2,6 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"html"
 	"log"
 	"os"
@@ -23,27 +22,26 @@ func Connect() {
 	var err error
 
 	if err = godotenv.Load(".env"); err != nil {
-		log.Fatalf("Could not load .env file")
+		log.Fatalln("godotenv: could not load .env file")
 	}
 
 	dsn := os.Getenv("DATABASE_DNS")
 	database, err = gorm.Open(postgres.Open(dsn))
 
 	if err != nil {
-		fmt.Println("Could not connect to database ")
-		log.Fatal("connection error:", err)
+		log.Fatalln("gorm: could not connect to database", err)
 	}
 
 	database.AutoMigrate(&models.User{})
 
-	fmt.Println("Database connection successful ")
+	log.Println("Database connection successful")
 }
 
 func GetUserByID(uid uint) (models.User, error) {
 	var user models.User
 
 	if err := database.Omit("password").First(&user, uid).Error; err != nil {
-		return user, errors.New("User not found")
+		return user, errors.New("user not found")
 	}
 
 	return user, nil
