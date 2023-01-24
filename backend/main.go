@@ -1,7 +1,7 @@
 package main
 
 import (
-	controllers "notes/backend/controllers/auth"
+	"notes/backend/controllers"
 	"notes/backend/services/database"
 
 	"github.com/gin-gonic/gin"
