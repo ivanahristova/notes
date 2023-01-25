@@ -44,3 +44,20 @@ func AddNote(title, description string, userID uint) error {
 
 	return database.Create(&note).Error
 }
+
+func UpdateNote(id uint, title, description string) error {
+	var note Note
+
+	if err := database.First(&note, id).Error; err != nil {
+		return err
+	}
+
+	note.Title = title
+	note.Description = description
+
+	return database.Save(&note).Error
+}
+
+func DeleteNote(id uint) error {
+	return database.Delete(&Note{}, id).Error
+}
