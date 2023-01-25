@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"net/http"
-	"notes/backend/models"
-	"notes/backend/services/database"
-	"notes/backend/utilities/token"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+
+	"notes/backend/services/database"
+	"notes/backend/utilities/token"
 )
 
 type NoteInput struct {
@@ -14,7 +15,7 @@ type NoteInput struct {
 	Description string `json:"description"`
 }
 
-func GetUserNotes(c *gin.Context) {
+func Index(c *gin.Context) {
 	userID, err := token.ExtractUserID(c)
 
 	if err != nil {
@@ -22,8 +23,8 @@ func GetUserNotes(c *gin.Context) {
 		return
 	}
 
-	var notes []models.Note
-	notes, err = database.GetUserNotes(userID)
+	var notes []database.Note
+	notes, err = database.GetNotes(userID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
@@ -32,7 +33,7 @@ func GetUserNotes(c *gin.Context) {
 	}
 }
 
-func AddNote(c *gin.Context) {
+func Create(c *gin.Context) {
 	var input NoteInput
 	var err error
 
@@ -56,4 +57,31 @@ func AddNote(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": "success", "data": "Note added successfully"})
 	}
+}
+
+func Show(c *gin.Context) {
+	noteID, err := strconv.ParseUint(c.Param("noteID"), 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	var note database.Note
+	note, err = database.GetNote(uint(noteID))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "data": note})
+}
+
+func Update(c *gin.Context) {
+	// TODO...
+}
+
+func Destroy(c *gin.Context) {
+	// TODO...
 }
