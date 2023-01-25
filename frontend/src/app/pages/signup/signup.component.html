@@ -58,6 +58,10 @@
       </div>
     </div>
   </div>
-  <div class="alert alert-success mt-5 mx-auto" *ngIf="isSuccessful" style="width: max-content;">
-    Your registration is successful!
+  <div *ngIf="isSuccessful">
+    <div class="mt-5 mx-auto" *ngIf="isSuccessful" style="width: max-content;">
+      <div id="navbarText">
+          <app-notes></app-notes>
+      </div>
+  </div>
   </div>

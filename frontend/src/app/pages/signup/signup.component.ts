@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AuthService } from '../../services/auth.service';
 
@@ -17,7 +18,7 @@ export class SignupComponent {
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private cookieService: CookieService) { }
 
   ngOnInit(): void {
   }
@@ -27,7 +28,10 @@ export class SignupComponent {
 
     this.authService.signup(username, email, password).subscribe({
       next: data => {
-        console.log(data);
+        // console.log(data);
+        const token = data.token;
+        this.cookieService.set('user-jwt', token);
+
         this.isSuccessful = true;
         this.isSignUpFailed = false;
       },

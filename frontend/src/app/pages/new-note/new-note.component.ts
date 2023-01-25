@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotesService } from 'src/app/services/notes.service';
@@ -17,7 +18,7 @@ export class NewNoteComponent {
   errorMessage = '';
 
   constructor(private notesService: NotesService, private authService: AuthService,
-              private cookieService: CookieService) { }
+              private cookieService: CookieService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -29,6 +30,8 @@ export class NewNoteComponent {
       next: note => {
         console.log(note);
         this.isSuccessful = true;
+
+        this.router.navigate(['/notes']);
       },
       error: err => {
         this.errorMessage = err.error.message;
