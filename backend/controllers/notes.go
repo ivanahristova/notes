@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"notes/backend/models"
 	"notes/backend/services/database"
 	"notes/backend/utilities/token"
 
@@ -22,7 +21,7 @@ func GetUserNotes(c *gin.Context) {
 		return
 	}
 
-	var notes []models.Note
+	var notes []database.Note
 	notes, err = database.GetUserNotes(userID)
 
 	if err != nil {

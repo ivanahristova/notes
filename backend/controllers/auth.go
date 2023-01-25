@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"notes/backend/models"
 	"notes/backend/services/database"
 	"notes/backend/utilities/token"
 
@@ -30,7 +29,7 @@ func GetCurrentUser(c *gin.Context) {
 		return
 	}
 
-	var user models.User
+	var user database.User
 	user, err = database.GetUserByID(userID)
 
 	if err != nil {
@@ -68,7 +67,7 @@ func GetUserNotesByID(c *gin.Context) {
 		return
 	}
 
-	var notes []models.Note
+	var notes []database.Note
 	notes, err = database.GetUserNotes(uint(userID))
 
 	if err != nil {
