@@ -146,11 +146,6 @@ func Destroy(c *gin.Context) {
 		return
 	}
 
-	if err = database.DeleteNote(uint(noteID)); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
-		return
-	}
-
 	var note database.Note
 	note, err = database.GetNote(uint(noteID))
 
@@ -169,6 +164,11 @@ func Destroy(c *gin.Context) {
 
 	if userID != note.UserID {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "fail", "data": "Unauthorized"})
+		return
+	}
+
+	if err = database.DeleteNote(uint(noteID)); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 		return
 	}
 
