@@ -4,7 +4,7 @@
     </div>
 
     <div id="navbarText">
-        <a class="btn btn-primary btn-block my-btn" href="/new-note">New note</a>
+        <a class="btn btn-primary btn-block my-btn" (click)="routeToAddNote()">New note</a>
     </div>
 </div>
 
@@ -13,7 +13,7 @@
         <div class="col-md-5">
             <ul class="notes">
                 <li *ngFor="let note of notes">
-                    <button [class.selected]="note === selectedNote" type="button" (click)="updateNote(note.noteId)">
+                    <button [class.selected]="note === selectedNote" type="button">
                         <span class="badge">{{note.noteId}}</span>
                         <span class="title">{{note.title}}</span>
                     </button>

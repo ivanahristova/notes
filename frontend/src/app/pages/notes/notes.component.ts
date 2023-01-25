@@ -37,9 +37,17 @@ export class NotesComponent implements OnInit {
     });
   }
 
-  updateNote(noteId: string) {
+  routeToAddNote() {
+    this.router.navigate(['/new-note']);
+  }
+
+  routeToUpdateNote(noteId: string) {
     // let  idString: string = noteId.toString;
-    this.router.navigate([`/notes/${this.userId}/update/${noteId}`]);
+    this.router.navigate(['/notes/{noteId}']);
+  }
+
+  routeToNotes() {
+    this.router.navigate(['/notes']);
   }
 
   deleteCookie() {

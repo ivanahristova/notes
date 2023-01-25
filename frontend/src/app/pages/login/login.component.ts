@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
 import { AuthService } from '../../services/auth.service';
@@ -18,7 +19,7 @@ export class LoginComponent {
   errorMessage = '';
   username = '';
 
-  constructor(private authService: AuthService, private cookieService: CookieService) { }
+  constructor(private router: Router, private authService: AuthService, private cookieService: CookieService) { }
 
   ngOnInit(): void {
 
@@ -35,6 +36,8 @@ export class LoginComponent {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.username = username;
+
+        this.router.navigate(['/notes']);
       },
       error: err => {
         this.errorMessage = err.error.error.charAt(0).toUpperCase() + err.error.error.slice(1);
