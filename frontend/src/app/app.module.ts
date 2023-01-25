@@ -10,6 +10,7 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { NoteComponent } from './pages/note/note.component';
 import { NotesComponent } from './pages/notes/notes.component';
 import { NewNoteComponent } from './pages/new-note/new-note.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { NewNoteComponent } from './pages/new-note/new-note.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
