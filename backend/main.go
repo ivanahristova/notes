@@ -24,5 +24,9 @@ func main() {
 	notes.GET("/", controllers.GetUserNotes)
 	notes.POST("/new", controllers.AddNote)
 
+	admin := api.Group("/admin")
+	admin.Use(middlewares.JwtAuthMiddleware())
+	admin.GET("/users/:id", controllers.GetUserNotesByID)
+
 	router.Run(":8080")
 }

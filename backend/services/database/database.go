@@ -32,7 +32,7 @@ func Connect() {
 		log.Fatalln("gorm: could not connect to database", err)
 	}
 
-	if err = database.AutoMigrate(&models.User{}, &models.Note{}); err != nil {
+	if err = database.AutoMigrate(&models.User{}, &models.Note{}, &models.Role{}); err != nil {
 		log.Fatalln("gorm: could not run auto migration")
 	}
 
@@ -56,10 +56,18 @@ func AddUser(email, username, password string) error {
 		return err
 	}
 
+	var userRoleID uint
+	userRoleID, err = GetRoleID("user")
+
+	if err != nil {
+		return err
+	}
+
 	user := models.User{
 		Email:    html.EscapeString(strings.TrimSpace(email)),
 		Username: html.EscapeString(strings.TrimSpace(username)),
 		Password: string(hashedPassword),
+		RoleID:   userRoleID,
 	}
 
 	return database.Create(&user).Error
@@ -95,6 +103,16 @@ func GetUserNotes(userId uint) ([]models.Note, error) {
 	}
 
 	return notes, nil
+}
+
+func GetRoleID(code string) (uint, error) {
+	var role models.Role
+
+	if err := database.Where("code = ?", code).Find(&role).Error; err != nil {
+		return 0, err
+	}
+
+	return role.ID, nil
 }
 
 func AddNote(title, description string, userID uint) error {

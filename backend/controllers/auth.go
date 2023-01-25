@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"notes/backend/models"
 	"notes/backend/services/database"
@@ -36,6 +37,44 @@ func GetCurrentUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": "success", "data": user})
+	}
+}
+
+func GetUserNotesByID(c *gin.Context) {
+	roleID, err := token.ExtractRoleID(c)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	var adminRoleID uint
+	adminRoleID, err = database.GetRoleID("admin")
+
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	if roleID != adminRoleID {
+		c.JSON(http.StatusForbidden, gin.H{"status": "fail", "data": "Unauthorized"})
+		return
+	}
+
+	userID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+		return
+	}
+
+	var notes []models.Note
+	notes, err = database.GetUserNotes(uint(userID))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"status": "success", "data": notes})
 	}
 }
 
