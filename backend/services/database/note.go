@@ -18,8 +18,8 @@ type Note struct {
 func GetNote(noteID uint) (Note, error) {
 	var note Note
 
-	if err := database.Where("id = ?", noteID).Find(&note).Error; err != nil {
-		return note, err
+	if err := database.First(&note, noteID).Error; err != nil {
+		return note, errors.New("note not found")
 	}
 
 	return note, nil
@@ -42,22 +42,37 @@ func AddNote(title, description string, userID uint) error {
 		UserID:      userID,
 	}
 
-	return database.Create(&note).Error
+	if err := database.Create(&note).Error; err != nil {
+		return errors.New("could not add note")
+	}
+
+	return nil
 }
 
 func UpdateNote(id uint, title, description string) error {
 	var note Note
+	var err error
 
-	if err := database.First(&note, id).Error; err != nil {
+	note, err = GetNote(id)
+
+	if err != nil {
 		return err
 	}
 
 	note.Title = title
 	note.Description = description
 
-	return database.Save(&note).Error
+	if err = database.Save(&note).Error; err != nil {
+		return errors.New("could not update note")
+	}
+
+	return nil
 }
 
 func DeleteNote(id uint) error {
-	return database.Delete(&Note{}, id).Error
+	if err := database.Delete(&Note{}, id).Error; err != nil {
+		return errors.New("could not delete note")
+	}
+
+	return nil
 }
