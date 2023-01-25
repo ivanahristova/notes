@@ -15,10 +15,20 @@ type Note struct {
 	UserID      uint   `gorm:"size:255;not null;"`
 }
 
-func GetUserNotes(userId uint) ([]Note, error) {
+func GetNote(noteID uint) (Note, error) {
+	var note Note
+
+	if err := database.Where("id = ?", noteID).Find(&note).Error; err != nil {
+		return note, err
+	}
+
+	return note, nil
+}
+
+func GetNotes(userID uint) ([]Note, error) {
 	var notes []Note
 
-	if err := database.Where("user_id = ?", userId).Find(&notes).Error; err != nil {
+	if err := database.Where("user_id = ?", userID).Find(&notes).Error; err != nil {
 		return notes, errors.New("user not found")
 	}
 

@@ -21,8 +21,11 @@ func main() {
 
 	notes := api.Group("/notes")
 	notes.Use(middlewares.JwtAuthMiddleware())
-	notes.GET("/", controllers.GetUserNotes)
-	notes.POST("/new", controllers.AddNote)
+	notes.GET("/", controllers.Index)
+	notes.POST("/", controllers.Create)
+	notes.GET("/:id", controllers.Show)
+	notes.PUT("/:id", controllers.Update)
+	notes.DELETE("/:id", controllers.Destroy)
 
 	admin := api.Group("/admin")
 	admin.Use(middlewares.JwtAuthMiddleware())

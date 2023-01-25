@@ -68,7 +68,7 @@ func GetUserNotesByID(c *gin.Context) {
 	}
 
 	var notes []database.Note
-	notes, err = database.GetUserNotes(uint(userID))
+	notes, err = database.GetNotes(uint(userID))
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "data": err.Error()})
