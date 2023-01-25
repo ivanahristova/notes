@@ -38,16 +38,12 @@ ng serve --open
 ## Content
 ### **Login screen**
 ![Login screen](./documentation/images/login-screen.png)
-<br />
 
 ### **Signup screen**
 ![Signup screen](./documentation/images/signup-screen.png)
-<br />
 
 ### **Notes screen**
 ![Notes screen](./documentation/images/notes-screen.png)
-<br />
 
 ### **New note screen**
 ![New note screen](./documentation/images/new-note-screen.png)
-<br />
