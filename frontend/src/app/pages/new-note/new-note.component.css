@@ -9,3 +9,17 @@
     border: #776BCC;
     margin: 1rem 1rem 1rem 1rem;
 }
+
+.m-1 {
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #776BCC, #aaa7f1);
+    border-color: transparent;
+}
+
+.textarea {
+    width: 100%;
+    height: 50px;
+}

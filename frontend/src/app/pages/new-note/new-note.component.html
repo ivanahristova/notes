@@ -1,0 +1,52 @@
+<div class="navigation">
+    <div>
+        <div id="navbarText">
+            <a class="btn btn-primary btn-block my-btn" href="/login" (click)="deleteCookie()">Logout</a>
+        </div>
+    </div>
+
+    <div>
+        <div id="navbarText">
+            <a class="btn btn-primary btn-block my-btn" href="/notes">My notes</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="pt-5 col-md-4 mx-auto">
+    <div class="card card-container">
+        <div class="card-body">
+            <form class="form" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm"
+                novalidate>
+
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" name="title" [(ngModel)]="form.title" required
+                        #title="ngModel" [ngClass]="{ 'is-invalid': f.submitted && title.errors }" />
+                    <div *ngIf="title.errors && f.submitted" class="invalid-feedback">
+                        Title is required!
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="description" class="form-control textarea" name="description"
+                    [(ngModel)]="form.description" #description="ngModel"
+                        [ngClass]="{ 'is-invalid': f.submitted && description.errors }" />
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block">
+                        Add note
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5 mx-auto" *ngIf="isSuccessful" style="width: max-content;">
+    <div class="alert alert-success" *ngIf="isSuccessful">
+        Note added successfully {{ title }}.
+    </div>
+</div>

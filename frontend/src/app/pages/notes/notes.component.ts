@@ -13,7 +13,7 @@ import { NotesService } from 'src/app/services/notes.service';
 })
 export class NotesComponent implements OnInit {
   public notes: NotesResponse = new NotesResponse();
-  private userId: string = '';
+  private userId: number = 0;
 
   selectedNote?: Note;
 
@@ -21,8 +21,8 @@ export class NotesComponent implements OnInit {
               private router: Router, private cookieService: CookieService) {}
 
   ngOnInit(): void {
-    this.userId = this.activatedRoute.snapshot.paramMap.get('userId')!;
-    this.notesService.getUserNotes(this.userId).subscribe({
+    // this.userId = Number(this.activatedRoute.snapshot.paramMap.get('userId'));
+    this.notesService.getUserNotes().subscribe({
       next: (response: NotesResponse) => {
         console.log(response);
         this.notes = response;
@@ -35,8 +35,8 @@ export class NotesComponent implements OnInit {
 
   getUserNotes() {
     const jwtService = new JwtHelperService();
-    const userId: string = jwtService.decodeToken(this.cookieService.get("user-jwt"))['user_id'];
-    this.notesService.getUserNotes(userId).subscribe({
+    // const userId: string = jwtService.decodeToken(this.cookieService.get("user-jwt"))['user_id'];
+    this.notesService.getUserNotes().subscribe({
       next: (response: NotesResponse) => {
         this.notes = response
       },
