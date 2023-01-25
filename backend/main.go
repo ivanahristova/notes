@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"notes/backend/controllers"
 	"notes/backend/middlewares"
 	"notes/backend/services/database"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {

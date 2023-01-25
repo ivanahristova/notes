@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"net/http"
-	"notes/backend/services/database"
-	"notes/backend/utilities/token"
 
 	"github.com/gin-gonic/gin"
+
+	"notes/backend/services/database"
+	"notes/backend/utilities/token"
 )
 
 type NoteInput struct {

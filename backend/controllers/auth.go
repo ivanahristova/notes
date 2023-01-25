@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
+
 	"notes/backend/services/database"
 	"notes/backend/utilities/token"
-
-	"github.com/gin-gonic/gin"
 )
 
 type LoginInput struct {
