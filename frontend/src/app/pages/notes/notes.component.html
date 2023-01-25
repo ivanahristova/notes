@@ -1,19 +1,27 @@
-<h2>My notes</h2>
+<div class="navigation">
+    <div id="navbarText">
+        <a class="btn btn-primary btn-block my-btn" href="/login" (click)="deleteCookie()">Logout</a>
+    </div>
 
-<!-- <ul class="notes">
-  <li *ngFor="let note of notes">
-    <button [class.selected]="note === selectedNote" type="button" (click)="onSelect(note)">
-      <span class="badge">{{note.id}}</span>
-      <span class="title">{{note.title}}</span>
-    </button>
-  </li>
-</ul> -->
+    <div id="navbarText">
+        <a class="btn btn-primary btn-block my-btn" href="/new-note">New note</a>
+    </div>
+</div>
 
-<!-- <div *ngIf="selectedNote">
-  <h2>{{selectedNote.name | uppercase}} Details</h2>
-  <div>id: {{selectedNote.id}}</div>
-  <div>
-    <label for="note-name">note name: </label>
-    <input id="note-name" [(ngModel)]="selectedNote.name" placeholder="name">
-  </div>
-</div> -->
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <ul class="notes">
+                <li *ngFor="let note of notes.notes">
+                    <button [class.selected]="note === selectedNote" type="button"
+                        (click)="updateNote(note.noteId)">
+                        <span class="badge">{{note.noteId}}</span>
+                        <span class="title">{{note.title}}</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<app-note [note]="selectedNote"></app-note>

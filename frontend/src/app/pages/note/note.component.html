@@ -1,0 +1,11 @@
+<div *ngIf="note">
+    <h2>{{note.title | uppercase}}</h2>
+    <!-- <div><span>id: </span>{{note.id}}</div> -->
+    <div>
+        <label for="note-title">Title:</label>
+        <input id="note-title" [(ngModel)]="note.title" placeholder="title">
+
+        <label for="note-title">Description:</label>
+        <input id="note-title" [(ngModel)]="note.description" placeholder="description">
+    </div>
+</div>

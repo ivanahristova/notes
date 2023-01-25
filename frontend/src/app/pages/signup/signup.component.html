@@ -8,7 +8,7 @@
 
         <div class="card-body">
           <form  name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-    
+
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" name="email" [(ngModel)]="form.email" required email #email="ngModel"
@@ -28,8 +28,8 @@
                 <div *ngIf="username.errors['minlength']">Username must be at least 3 characters</div>
                 <div *ngIf="username.errors['maxlength']">Username must be at most 20 characters</div>
               </div>
-            </div>           
-    
+            </div>
+
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required minlength="6"
@@ -39,18 +39,22 @@
                 <div *ngIf="password.errors['minlength']">Password must be at least 6 characters</div>
               </div>
             </div>
-    
+
             <div class="form-group">
               <button class="btn btn-primary btn-block">Sign up</button>
             </div>
-    
+
+            <div *ngIf="!isSuccessful">
+              <a class="my-text" href="/login">Already have an account</a>
+            </div>
+
             <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
               Signup failed!<br />{{ errorMessage }}
             </div>
-    
+
           </form>
         </div>
-        
+
       </div>
     </div>
   </div>
